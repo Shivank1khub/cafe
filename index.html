@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Rowdy Cafe | Order Online</title>
+  <!-- Bootstrap 5 + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #0b0b0b;
+      background-image: radial-gradient(circle at 10% 20%, rgba(180, 40, 40, 0.08) 1.2px, transparent 1.2px);
+      background-size: 28px 28px;
+      font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, 'Montserrat', sans-serif;
+      color: #f0f0f0;
+      scroll-behavior: smooth;
+    }
+
+    .menu-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: #0a0a0aee;
+      box-shadow: 0 0 0 2px #B22222, 0 20px 35px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    .logo-header {
+      background: #000000aa;
+      backdrop-filter: blur(4px);
+      border-bottom: 2px solid #B22222;
+      padding: 1.2rem 0;
+      text-align: center;
+    }
+    .logo-center { display: inline-block; text-align: center; }
+    /* =====================================================
+       👇 CHANGE YOUR LOGO HERE (replace the src URL)
+       ===================================================== */
+    .logo-img {
+      max-width: 160px;
+      height: auto;
+      filter: drop-shadow(0 4px 6px #000);
+      transition: transform 0.2s;
+    }
+    .logo-img:hover { transform: scale(1.02); }
+    .subhead { color: #aaa; font-size: 0.75rem; letter-spacing: 1px; margin-top: 6px; }
+
+    .action-bar {
+      background: #0a0a0acc;
+      backdrop-filter: blur(10px);
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #B22222;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      z-index: 100;
+    }
+    .action-btn {
+      background: #B22222;
+      border: none;
+      color: white;
+      border-radius: 40px;
+      padding: 0.5rem 1.8rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .action-btn:hover { background: #8b1a1a; transform: translateY(-2px); }
+
+    .category-card {
+      background: #0f0f0fdd;
+      border: 1px solid #2c2c2c;
+      border-radius: 24px;
+      margin-bottom: 2.2rem;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      scroll-margin-top: 100px;
+    }
+    .cat-head {
+      background: linear-gradient(90deg, #1e1e1e, #020202);
+      padding: 0.9rem 1.5rem;
+      border-left: 6px solid #B22222;
+      border-bottom: 1px solid #B22222;
+      font-weight: 800;
+      font-size: 1.6rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #E6B422;
+      font-family: 'Bebas Neue', 'Impact', cursive;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cat-head:hover { background: linear-gradient(90deg, #2a2a2a, #0f0f0f); }
+    .toggle-icon { font-size: 1.3rem; color: #E6B422; transition: transform 0.2s; }
+    .cat-body { display: flex; flex-wrap: wrap; padding: 1.2rem; gap: 1.5rem; }
+    .category-card.collapsed .cat-body { display: none; }
+    .category-card.collapsed .toggle-icon { transform: rotate(180deg); }
+
+    .cat-img-place { flex: 0 0 180px; }
+    .cat-img-place img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 1px solid #B22222;
+      box-shadow: 0 8px 14px black;
+      transition: 0.2s;
+    }
+    .menu-list { flex: 1; display: flex; flex-direction: column; gap: 0.8rem; }
+    .menu-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      border-bottom: 1px dashed rgba(182, 34, 34, 0.4);
+      padding-bottom: 6px;
+      gap: 8px;
+    }
+    .item-info { flex: 1; }
+    .item-name { font-weight: 700; font-size: 1rem; color: #fff; }
+    .item-price { font-weight: 700; color: #fff; background: #B22222aa; padding: 0.15rem 0.8rem; border-radius: 40px; font-size: 0.85rem; white-space: nowrap; }
+    .add-btn {
+      background: #B22222;
+      border: none;
+      color: white;
+      border-radius: 30px;
+      padding: 0.3rem 1rem;
+      font-size: 0.75rem;
+      font-weight: bold;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .add-btn:hover { background: #ff4d4d; transform: scale(1.02); }
+
+    .order-summary {
+      background: #0a0a0af2;
+      backdrop-filter: blur(8px);
+      border-top: 2px solid #B22222;
+      border-bottom: 2px solid #B22222;
+      padding: 1rem 1.5rem;
+      position: sticky;
+      bottom: 0;
+      z-index: 99;
+    }
+    .summary-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.8rem;
+    }
+    .order-list {
+      max-height: 200px;
+      overflow-y: auto;
+      background: #111;
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      margin-bottom: 0.8rem;
+      font-size: 0.85rem;
+    }
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      border-bottom: 1px dashed #B22222;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .order-item-details {
+      flex: 2;
+      color: #e0b85b;
+      font-size: 0.85rem;
+    }
+    .order-item-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .qty-btn {
+      background: #2a2a2a;
+      border: none;
+      color: #E6B422;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-weight: bold;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .qty-btn:hover { background: #B22222; color: white; transform: scale(1.05); }
+    .item-quantity {
+      background: #1a1a1a;
+      padding: 0.1rem 0.6rem;
+      border-radius: 20px;
+      font-weight: 600;
+      min-width: 40px;
+      text-align: center;
+    }
+    .total-amount {
+      font-size: 1.4rem;
+      font-weight: 800;
+      font-family: 'Bebas Neue', cursive;
+      color: #E6B422;
+      background: #1a1a1a;
+      padding: 0.2rem 1.2rem;
+      border-radius: 40px;
+    }
+    .whatsapp-btn {
+      background: #25D366;
+      color: #000;
+      font-weight: bold;
+      padding: 0.6rem 1.6rem;
+      border-radius: 50px;
+      border: none;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .whatsapp-btn:hover { background: #20b859; transform: scale(1.02); color: white; }
+
+    @media (max-width: 768px) {
+      .cat-body { flex-direction: column; }
+      .cat-img-place { text-align: center; flex: 0 0 auto; }
+      .cat-img-place img { width: 160px; height: 160px; }
+      .cat-head { font-size: 1.4rem; }
+      .order-item { flex-direction: column; align-items: flex-start; }
+      .order-item-controls { align-self: flex-end; }
+    }
+
+    .footer-dark {
+      background: #030303f2;
+      border-top: 2px solid #B22222;
+      padding: 2rem 1rem;
+      font-size: 0.8rem;
+    }
+    hr { background-color: #B22222; opacity: 0.3; }
+
+    /* modal dark theme */
+    .modal-content {
+      background-color: #1a1a1a;
+      color: #f0f0f0;
+      border: 1px solid #B22222;
+    }
+    .modal-header { border-bottom: 1px solid #B22222; }
+    .modal-footer { border-top: 1px solid #B22222; }
+    .btn-close { filter: invert(1); }
+    .form-select {
+      background-color: #2a2a2a;
+      color: #fff;
+      border-color: #B22222;
+    }
+    .form-select:focus {
+      border-color: #E6B422;
+      box-shadow: 0 0 0 0.2rem rgba(230, 180, 34, 0.25);
+    }
+    .btn-primary {
+      background-color: #B22222;
+      border-color: #B22222;
+    }
+    .btn-primary:hover { background-color: #8b1a1a; border-color: #8b1a1a; }
+  </style>
+</head>
+<body>
+
+<div class="menu-container">
+  <div class="logo-header">
+    <div class="logo-center">
+      <!-- ======================================================= -->
+      <!-- TO CHANGE THE LOGO: Replace the src attribute below with -->
+      <!-- your own image URL (PNG, JPG, SVG, WebP).               -->
+      <!-- ======================================================= -->
+      <img class="logo-img" src="https://placehold.co/400x120?text=ROWDY+CAFE&font=montserrat" alt="Rowdy Cafe Logo" style="background:#1a1a1a; border-radius:40px; padding:0.5rem 1.5rem;">
+      <div class="subhead">Food That Feeds The Soul | Since 2020</div>
+    </div>
+  </div>
+
+  <div class="action-bar">
+    <button class="action-btn" id="collapseAllBtn"><i class="fas fa-compress-alt"></i> Collapse All</button>
+  </div>
+
+  <div class="p-3 p-md-4" id="fullMenuContainer"></div>
+
+  <div class="order-summary">
+    <div class="summary-header">
+      <h5 class="text-warning"><i class="fas fa-shopping-cart"></i> Your Order</h5>
+      <div class="total-amount" id="totalAmount">₹0</div>
+    </div>
+    <div id="orderList" class="order-list"><div class="text-muted">No items added yet</div></div>
+    <div class="d-flex justify-content-end">
+      <button id="whatsappOrderBtn" class="whatsapp-btn"><i class="fab fa-whatsapp fa-lg"></i> Order via WhatsApp</button>
+    </div>
+  </div>
+
+  <div class="footer-dark">
+    <div class="row justify-content-between align-items-center g-4">
+      <div class="col-md-6">
+        <h5 class="text-danger fw-bold">!!! REACH OUT TO US !!!</h5>
+        <p class="small mb-1"><i class="fas fa-map-marker-alt text-danger me-2"></i> HEAD OFFICE: PLOT NO, A144/6, KOPARKHAIRNE ROAD, TTC INDUSTRIAL AREA, MIDC INDUSTRIAL AREA, PAWNE, NAVI MUMBAI, MAHARASHTRA-400710</p>
+        <p class="small"><i class="fas fa-building text-danger me-2"></i> NORTH INDIA OFFICE: 922-B, HEMKUNT CHAMBERS, 89-NEHRU PLACE, NEW DELHI-110019</p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <p><i class="fas fa-phone-alt text-danger me-2"></i> +91-6388775050</p>
+        <p><i class="fas fa-globe text-danger me-2"></i> WWW.ROWDYCAFE.COM</p>
+        <p class="text-warning small">📍 ROWDY CAFE | 📍 ROWDY CAFE</p>
+      </div>
+    </div>
+    <hr>
+    <div class="text-center mt-2 small text-secondary">Momos Are A Beloved Tibet & Nepali Cuisine Staple — Bold Flavors, Rowdy Vibe. © 2025 Rowdy Cafe</div>
+  </div>
+</div>
+
+<!-- Modal for table number -->
+<div class="modal fade" id="tableModal" tabindex="-1" aria-labelledby="tableModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-warning" id="tableModalLabel"><i class="fas fa-chair"></i> Select Table Number</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-3">Please choose your table number before placing the order.</p>
+        <select id="tableNumberSelect" class="form-select">
+          <option value="" disabled selected>-- Select Table (1-10) --</option>
+          <option value="1">Table 1</option><option value="2">Table 2</option><option value="3">Table 3</option>
+          <option value="4">Table 4</option><option value="5">Table 5</option><option value="6">Table 6</option>
+          <option value="7">Table 7</option><option value="8">Table 8</option><option value="9">Table 9</option>
+          <option value="10">Table 10</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="confirmOrderBtn" class="btn btn-primary">Proceed to WhatsApp</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // ---------- COMPLETE MENU DATA (exact original items & prices) ----------
+  const menuData = [
+    { name: "SWEET LASSI", img: "Lassi.png", items: [
+      { name: "Mango Lassi", price: 80 }, { name: "Orange Lassi", price: 80 }, { name: "Strawberry Lassi", price: 80 },
+      { name: "Rose Lassi", price: 80 }, { name: "Butterscotch Lassi", price: 80 }, { name: "Kesar Pista Lassi", price: 80 }
+    ]},
+    { name: "REFRESHER", img: "Refresher.png", items: [
+      { name: "Nimbu Pani", price: 30 }, { name: "Nimbu Soda Masala", price: 30 }, { name: "Nariyal Pani", price: 40 }
+    ]},
+    { name: "MOJITOS", img: "Refresher.png", items: [
+      { name: "Mango Mojito", price: 79 }, { name: "Classic Virgin Mojito", price: 89 },
+      { name: "Blue Lagoon Mojito", price: 89 }, { name: "Blueberry Mojito", price: 89 }
+    ]},
+    { name: "DESSERT SHAKE", img: "dessert shake.png", items: [
+      { name: "Oreo Shake", price: 99 }, { name: "Kit Kat Shake", price: 139 }, { name: "Butterscotch Shake", price: 89 },
+      { name: "Banana Shake", price: 89 }, { name: "Strawberry Shake", price: 99 }, { name: "Mango Shake", price: 109 }
+    ]},
+    { name: "COLD COFFEE", img: "Coldoffee.png", items: [
+      { name: "Classic Cold Coffee", price: 69 }, { name: "Hazelnut Cold Coffee", price: 99 }, { name: "Caramel Cold Coffee", price: 99 }
+    ]},
+    { name: "HOT BEVERAGES", img: "https://placehold.co/400x400/png?text=Tea+Coffee", items: [
+      { name: "Regular Chai", price: 30 }, { name: "Masala Chai", price: 30 }, { name: "Elaichi Chai", price: 30 },
+      { name: "Adrak Wali Chai", price: 30 }, { name: "Tandoori Chai", price: 30 },
+      { name: "Cappuccino Coffee", price: 40 }, { name: "Mocha Coffee", price: 40 }, { name: "Vanilla Coffee", price: 40 }
+    ]},
+    { name: "CLASSIC MOMOS", img: "Momos.png", items: [
+      { name: "Veg Momo", price: 75 }, { name: "Veg Peri Peri Momo", price: 95 }, { name: "Veg Cheese Momo", price: 115 },
+      { name: "Paneer Achari Momo", price: 115 }, { name: "Paneer Peri Peri Momo", price: 115 }
+    ]},
+    { name: "PAHADI SOUP MOMO (JHOL)", img: "Jhol.png", items: [
+      { name: "Veg Jhol Momo", price: 130 }, { name: "Veg Paneer Jhol Momo", price: 150 }
+    ]},
+    { name: "TANDOORI BHATTI SE", img: "https://placehold.co/400x400/png?text=Tandoori", items: [
+      { name: "Creamy Veg Tandoori Momo", price: 139 }, { name: "Creamy Paneer Tandoori Momo", price: 159 }
+    ]},
+    { name: "SIZZLER & FRIES", img: "Sizzler.png", items: [
+      { name: "Veg Sizzler with Noodles", price: 259 }, { name: "Salted Fries (Large)", price: 89 },
+      { name: "Peri Peri Fries (Large)", price: 109 }, { name: "Cheese Fries (Large)", price: 139 }
+    ]},
+    { name: "SANDWICH & BURGER", img: "Sandwich.png", items: [
+      { name: "Grilled Spinach and Corn Sandwich", price: 90 }, { name: "Paneer Tikka Sandwich", price: 135 },
+      { name: "Veg Burger", price: 69 }, { name: "Peri Peri Burger", price: 85 }
+    ]},
+    { name: "PIZZA", img: "pizza.png", items: [
+      { name: "Onion Capsicum Corn Pizza", price: 175 }, { name: "Farmhouse Pizza", price: 175 },
+      { name: "Paneer Tandoori Pizza", price: 185 }, { name: "Paneer Barebeque Pizza", price: 185 }
+    ]},
+    { name: "SPRING ROLLS", img: "Rolls.png", items: [
+      { name: "Veg Cigar Rolls (4 Pcs)", price: 75 }, { name: "Veg Rolls (2 Pcs / 8 Small Pcs)", price: 105 },
+      { name: "Paneer Rolls (2 Pcs / 8 Small Pcs)", price: 155 }
+    ]},
+    { name: "PASTA", img: "https://placehold.co/400x400/png?text=Pasta", items: [
+      { name: "Red Sauce Pasta", price: 150 }, { name: "White Sauce Pasta", price: 155 }, { name: "Add Cheese (Extra)", price: 30 }
+    ]},
+    { name: "PAV BHAJI", img: "https://placehold.co/400x400/png?text=Pav+Bhaji", items: [
+      { name: "Bhaji With 2 Butter Pav", price: 150 }, { name: "Butter Bhaji With 2 Butter Pav", price: 155 },
+      { name: "Extra Pav (2 Pcs)", price: 15 }
+    ]},
+    { name: "KOREAN RAMEN", img: "https://placehold.co/400x400/png?text=Ramen", items: [
+      { name: "Koreans Spicy Veg Ramen", price: 169 }, { name: "Korean Cheese Ramen", price: 189 },
+      { name: "Korean Kimchi Ramen", price: 169 }
+    ]},
+    { name: "KOREAN CORN DOG", img: "https://placehold.co/400x400/png?text=CornDog", items: [
+      { name: "Chilli Garlic Corn Dog", price: 159 }, { name: "Peri Peri Corn Dog", price: 159 },
+      { name: "Tandoori Corn Dog", price: 159 }, { name: "Barbeque Corn Dog", price: 159 }
+    ]},
+    { name: "CHOLE-BHATURE & PARATHA", img: "https://placehold.co/400x400/png?text=Chole", items: [
+      { name: "Bhatura 2 Pcs with Pindi Chole", price: 175 },
+      { name: "Laccha Paratha With 4 Pcs Veg Shammi Kebab", price: 205 },
+      { name: "Laccha Paratha With Lucknawi Veg Galouti", price: 190 },
+      { name: "Laccha Paratha With Dal Makhani", price: 200 },
+      { name: "Laccha Paratha With Soya Keema Matar", price: 190 }
+    ]},
+    { name: "IDLI & MEDU VADA", img: "https://placehold.co/400x400/png?text=Idli", items: [
+      { name: "Idli 2 Pcs With Sambhar", price: 85 }, { name: "Idli & Wada 1 Pcs Each With Sambhar", price: 105 },
+      { name: "Medu Wada 2 Pcs With Sambhar", price: 120 }
+    ]},
+    { name: "FRIED RICE, MANCHURIAN", img: "https://placehold.co/400x400/png?text=FriedRice", items: [
+      { name: "Fried Rice With Manchurian Ball", price: 195 }, { name: "Plain Rice Bowl With Chole Masala", price: 170 },
+      { name: "Plain Rice Bowl With Rajma", price: 180 }, { name: "Plain Rice Bowl With Dal Makhani", price: 199 }
+    ]},
+    { name: "BIRYANI", img: "https://placehold.co/400x400/png?text=Biryani", items: [
+      { name: "Veg Biryani", price: 175 }, { name: "Paneer Biryani", price: 275 }
+    ]},
+    { name: "KEBAB", img: "https://placehold.co/400x400/png?text=Kebab", items: [
+      { name: "Veg Shammi Kebab (4 PCS)", price: 120 }, { name: "Veg Lucknawi Galouti (4 Pcs)", price: 120 },
+      { name: "Veg Harabhara Kebab (4 Pcs)", price: 135 }
+    ]},
+    { name: "WAFFLE & DESSERTS", img: "https://placehold.co/400x400/png?text=Waffle", items: [
+      { name: "Dark Chocolate Waffle", price: 139 }, { name: "Oreo Waffle", price: 149 },
+      { name: "Dark And White Waffle", price: 159 }, { name: "Chocolate Brownies", price: 79 },
+      { name: "Sizzling Brownies With Ice Cream", price: 139 }
+    ]},
+    { name: "SWEETY SWEET", img: "https://placehold.co/400x400/png?text=Sweets", items: [
+      { name: "Gulab Jamun (2 Pcs)", price: 55 }, { name: "Ras Malai (1 Pcs)", price: 65 },
+      { name: "Moon Dal Halwa", price: 95 }, { name: "Moong Dal Halwa Sizzler", price: 115 }
+    ]},
+    { name: "BUBBLE TEA", img: "https://placehold.co/400x400/png?text=BubbleTea", items: [
+      { name: "Strawberry Blush", price: 149 }, { name: "Blue Citrus", price: 149 },
+      { name: "Mango Passion", price: 149 }, { name: "Lychee Lush", price: 149 }
+    ]}
+  ];
+
+  // Render main menu
+  const container = document.getElementById('fullMenuContainer');
+  function renderMenu() {
+    let html = '';
+    menuData.forEach((cat, idx) => {
+      html += `<div id="cat_${idx}" class="category-card">`;
+      html += `<div class="cat-head">${cat.name} <span class="toggle-icon"><i class="fas fa-chevron-down"></i></span></div>`;
+      html += `<div class="cat-body">`;
+      html += `<div class="cat-img-place"><img src="${cat.img}" alt="${cat.name}"></div>`;
+      html += `<div class="menu-list">`;
+      cat.items.forEach(item => {
+        html += `
+          <div class="menu-item-row">
+            <div class="item-info">
+              <div class="item-name">${item.name}</div>
+            </div>
+            <div class="item-price">₹${item.price}</div>
+            <button class="add-btn" data-name="${item.name.replace(/"/g, '&quot;')}" data-price="${item.price}">➕ Add</button>
+          </div>
+        `;
+      });
+      html += `</div></div></div>`;
+    });
+    container.innerHTML = html;
+  }
+  renderMenu();
+
+  // Cart state
+  let orderItems = [];
+  let nextId = 1;
+
+  function addOrIncrementItem(name, price) {
+    const existing = orderItems.find(i => i.name === name && i.price === price);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      orderItems.push({ id: nextId++, name, price, quantity: 1 });
+    }
+    updateOrderUI();
+  }
+
+  function incrementItem(id) {
+    const idx = orderItems.findIndex(i => i.id === id);
+    if (idx !== -1) {
+      orderItems[idx].quantity += 1;
+      updateOrderUI();
+    }
+  }
+
+  function decrementItem(id) {
+    const idx = orderItems.findIndex(i => i.id === id);
+    if (idx !== -1) {
+      if (orderItems[idx].quantity > 1) {
+        orderItems[idx].quantity -= 1;
+      } else {
+        orderItems.splice(idx, 1);
+      }
+      updateOrderUI();
+    }
+  }
+
+  function updateOrderUI() {
+    const orderListDiv = document.getElementById('orderList');
+    const totalSpan = document.getElementById('totalAmount');
+    if (orderItems.length === 0) {
+      orderListDiv.innerHTML = '<div class="text-muted">No items added yet</div>';
+      totalSpan.innerText = '₹0';
+      return;
+    }
+    let listHtml = '';
+    let grandTotal = 0;
+    orderItems.forEach(item => {
+      const lineTotal = item.price * item.quantity;
+      grandTotal += lineTotal;
+      listHtml += `
+        <div class="order-item" data-id="${item.id}">
+          <div class="order-item-details">${item.name} (₹${item.price} each)</div>
+          <div class="order-item-controls">
+            <button class="qty-btn dec-btn" data-id="${item.id}">−</button>
+            <span class="item-quantity">${item.quantity}</span>
+            <button class="qty-btn inc-btn" data-id="${item.id}">+</button>
+            <span style="margin-left: 8px; font-weight:bold; color:#E6B422;">₹${lineTotal}</span>
+          </div>
+        </div>
+      `;
+    });
+    orderListDiv.innerHTML = listHtml;
+    totalSpan.innerText = `₹${grandTotal}`;
+
+    document.querySelectorAll('.dec-btn').forEach(btn => {
+      btn.removeEventListener('click', decHandler);
+      btn.addEventListener('click', decHandler);
+    });
+    document.querySelectorAll('.inc-btn').forEach(btn => {
+      btn.removeEventListener('click', incHandler);
+      btn.addEventListener('click', incHandler);
+    });
+    function decHandler(e) { decrementItem(parseInt(this.getAttribute('data-id'))); }
+    function incHandler(e) { incrementItem(parseInt(this.getAttribute('data-id'))); }
+  }
+
+  function attachAddListeners() {
+    document.querySelectorAll('.add-btn').forEach(btn => {
+      btn.removeEventListener('click', addHandler);
+      btn.addEventListener('click', addHandler);
+    });
+    function addHandler(e) {
+      const name = this.getAttribute('data-name');
+      const price = parseInt(this.getAttribute('data-price'));
+      addOrIncrementItem(name, price);
+    }
+  }
+
+  function initCollapse() {
+    const cards = document.querySelectorAll('.category-card');
+    cards.forEach(card => {
+      const heading = card.querySelector('.cat-head');
+      if (heading) {
+        heading.addEventListener('click', (e) => {
+          e.stopPropagation();
+          card.classList.toggle('collapsed');
+        });
+      }
+    });
+    const collapseBtn = document.getElementById('collapseAllBtn');
+    collapseBtn.addEventListener('click', () => {
+      const allCards = document.querySelectorAll('.category-card');
+      const anyExpanded = Array.from(allCards).some(c => !c.classList.contains('collapsed'));
+      allCards.forEach(c => {
+        if (anyExpanded) c.classList.add('collapsed');
+        else c.classList.remove('collapsed');
+      });
+      collapseBtn.innerHTML = anyExpanded ? '<i class="fas fa-expand-alt"></i> Expand All' : '<i class="fas fa-compress-alt"></i> Collapse All';
+    });
+  }
+
+  function buildWhatsAppMessage(tableNumber) {
+    if (orderItems.length === 0) return null;
+    let message = "🍽️ *ROWDY CAFE - ORDER* 🍽️";
+    message += ` *Table No. ${tableNumber}*`;
+    message += "🪑 ";
+    let grandTotal = 0;
+    orderItems.forEach((item, index) => {
+      const lineTotal = item.price * item.quantity;
+      grandTotal += lineTotal;
+      message += `${index+1}. ${item.name}`;
+      message += `   Qty: ${item.quantity} × ₹${item.price} = ₹${lineTotal}, `;
+      if (index < orderItems.length - 1) message += "";
+    });
+    message += "";
+    message += ` TOTAL = ₹${grandTotal}/.`;
+    message += "🙏 Thank you! 🔥";
+    return message;
+  }
+
+  const RESTAURANT_PHONE = "916386042426";
+
+  const tableModal = new bootstrap.Modal(document.getElementById('tableModal'));
+  const whatsappBtn = document.getElementById('whatsappOrderBtn');
+  const confirmOrderBtn = document.getElementById('confirmOrderBtn');
+
+  whatsappBtn.addEventListener('click', () => {
+    if (orderItems.length === 0) {
+      alert("Please add at least one item to your order.");
+      return;
+    }
+    const selectEl = document.getElementById('tableNumberSelect');
+    selectEl.value = "";
+    tableModal.show();
+  });
+
+  confirmOrderBtn.addEventListener('click', () => {
+    const selectEl = document.getElementById('tableNumberSelect');
+    const tableValue = selectEl.value;
+    if (!tableValue || tableValue === "") {
+      alert("Please select a table number (1 to 10).");
+      return;
+    }
+    const msg = buildWhatsAppMessage(tableValue);
+    if (!msg) return;
+    const encoded = encodeURIComponent(msg);
+    window.open(`https://wa.me/${RESTAURANT_PHONE}?text=${encoded}`, '_blank');
+    tableModal.hide();
+  });
+
+  setTimeout(() => {
+    attachAddListeners();
+    initCollapse();
+    updateOrderUI();
+  }, 50);
+</script>
+</body>
+</html>
